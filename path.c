@@ -16,9 +16,11 @@ struct Link{
     int node2;
     double length;
 }Links[MaxL+100];
+int ct=1;
 double map[MNode+10][MNode+10];
 double dis[MNode+10][MNode+10];
 int vis[MNode+10];
+int route[MNode+10];
 int read_map(){
     FILE* fp = fopen("Final_Map.map", "r");
         if(fp==NULL){
@@ -75,30 +77,33 @@ void dijkstra(int u){
         for(int j=1;j<=MNode;j++){
             if(map[temp][i]+dis[u][temp]<dis[u][i]){
                     dis[u][i]=map[temp][i]+dis[u][temp];
+                    route[ct++]=temp;
+            }
         }
     }
-    }
+
 }
 int main(){
     if(!read_map()){
         printf("Failed to read Final_Map.map, please try again.\n");
         return 0;
     }
+    int input1,input2;
+    scanf("Please Input the 2 nodes' ID :");
+    scanf("%d %d",&input1,&input2);
+    route[0]=input1;
     initial();
-    int i=0;
-    for(i=1;i<=MNode;i++){
-    dijkstra(i);
-    //for(int j=1;j<=MNode;j++)if(dis[i][j]>0.001&&dis[i][j]<99999)printf("%d->%d: %lf\n",i,j,dis[i][j]);
-  //  printf("%.2lf\n",temp);
-    }
-  /*
-    for(int i=1;i<=MNode;i++){
+    dijkstra(input1);
+    printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input1][input2]);
+    for(int i=0;i<=ct;i++)printf("%d->",route[i]);
+
+    //for(i=1;i<=MNode;i++)for(int j=1;j<=MNode;j++)if(dis[i][j]>0.001&&dis[i][j]<99999)printf("%d->%d: %lf\n",i,j,dis[i][j]);
+    /*for(int i=1;i<=MNode;i++){
             dijkstra(1);
             for(int j=1;j<=MNode;j++){
                     if(dis[i][j]>0)printf("%d->%d: %lf\n",i,j,dis[i][j]);
                     if(dis[j][i]>0)printf("%d->%d: %lf\n",j,i,dis[j][i]);
             }
-    }
-    */
+    }*/
     return 0;
 }
