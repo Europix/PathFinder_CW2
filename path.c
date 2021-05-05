@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<math.h>
+//#include<stack>
 #define MaxL 2345
 #define MaxN 6286
 #define MNode MaxN-MaxL
@@ -18,7 +19,7 @@ struct Link{
 }Links[MaxL+100];
 int ct=1;
 double map[MNode+10][MNode+10];
-double dis[MNode+10][MNode+10];
+double dis[MNode+10];
 int vis[MNode+10];
 int route[MNode+10];
 int read_map(){
@@ -62,26 +63,29 @@ void initial(){
 }
 void dijkstra(int u){
     memset(vis,0,sizeof(vis));
-    for(int i=1;i<=MNode;i++)dis[u][i]=map[u][i];
+    for(int i=1;i<=MNode;i++){
+            dis[i]=map[u][i];
+    }
     vis[u]=1;
     for(int i=1;i<MNode;i++){
         double mini=infi;
         int temp;
         for(int j=1;j<MNode;j++){
-            if(!vis[j] && dis[u][j]<mini){
-                mini=dis[u][j];
+            if(!vis[j] && dis[j]<mini){
+                mini=dis[j];
                 temp=j;
+               // route[j]=temp;
             }
         }
         vis[temp]=1;
         for(int j=1;j<=MNode;j++){
-            if(map[temp][i]+dis[u][temp]<dis[u][i]){
-                    dis[u][i]=map[temp][i]+dis[u][temp];
-                    route[ct++]=temp;
+            if(!vis[j] && map[temp][j]+dis[temp]<dis[j]){
+                    dis[j]=map[temp][j]+dis[temp];
+                    route[j]=temp;
+
             }
         }
     }
-
 }
 int main(){
     if(!read_map()){
@@ -89,14 +93,24 @@ int main(){
         return 0;
     }
     int input1,input2;
-    scanf("Please Input the 2 nodes' ID :");
+    printf("Please Input the 2 nodes' ID :\n");
     scanf("%d %d",&input1,&input2);
+    if(input1>MNode || input1<=0 || input2>MNode || input2<=0){
+        printf("Invalid Input!");
+        return 0;
+    }
     route[0]=input1;
+    route[1]=input2;
     initial();
     dijkstra(input1);
-    printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input1][input2]);
-    for(int i=0;i<=ct;i++)printf("%d->",route[i]);
-
+    //if(dis[input1][i]<99999)printf("%d\n",i);
+    if(dis[input2]<=99999){
+            printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input2]);
+            for(int i=0;i<=MNode;i++)if(route[i]!=0)printf("%d->",route[i]);
+    }
+    else printf("Sorry, can't find a way from node %d to %d.", input1,input2);
+//    fprintf("%d\n", dis[input1][input2]);
+   // print(input1,input2);
     //for(i=1;i<=MNode;i++)for(int j=1;j<=MNode;j++)if(dis[i][j]>0.001&&dis[i][j]<99999)printf("%d->%d: %lf\n",i,j,dis[i][j]);
     /*for(int i=1;i<=MNode;i++){
             dijkstra(1);
