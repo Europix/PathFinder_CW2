@@ -7,7 +7,7 @@ struct Node{
     double x;
     double y;
 }Nodes[MaxN-MaxL+100];
-
+int ct=1;
 struct Link{
     int node1;
     int node2;
