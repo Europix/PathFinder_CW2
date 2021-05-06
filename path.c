@@ -22,6 +22,7 @@ double map[MNode+10][MNode+10];
 double dis[MNode+10];
 int vis[MNode+10];
 int route[MNode+10];
+int ans[MNode+10];
 int read_map(){
     FILE* fp = fopen("Final_Map.map", "r");
         if(fp==NULL){
@@ -68,23 +69,40 @@ void dijkstra(int u){
     }
     vis[u]=1;
     for(int i=1;i<MNode;i++){
-        double mini=infi;
+        double mini=99999.99;
         int temp;
         for(int j=1;j<MNode;j++){
             if(!vis[j] && dis[j]<mini){
                 mini=dis[j];
                 temp=j;
-               // route[j]=temp;
             }
         }
         vis[temp]=1;
-        for(int j=1;j<=MNode;j++){
-            if(!vis[j] && map[temp][j]+dis[temp]<dis[j]){
+        for(int j=1;j<MNode;j++){
+            if(map[temp][j]<=99999 && (!vis[j]) && map[temp][j]+dis[temp]<dis[j]){
                     dis[j]=map[temp][j]+dis[temp];
                     route[j]=temp;
-
             }
         }
+    }
+}
+void save_map(){
+    FILE* fp = fopen("map.txt", "w");
+        if(fp==NULL){
+            return 0;
+        }
+    for(int i=1;i<=MaxL ; i++){
+        fprintf(fp,"%0.6lf %0.6lf\n%0.6lf %0.6lf\n\n", Nodes[Links[i].node1].x,Nodes[Links[i].node1].y,Nodes[Links[i].node2].x,Nodes[Links[i].node2].y);
+    }
+}
+void save_file(){
+    FILE* fp = fopen("ans.txt", "w");
+        if(fp==NULL){
+            return 0;
+        }
+    for(int i=ct;i>1;i--){
+        fprintf(fp,"%0.6lf %0.6lf\n", Nodes[ans[i]].x ,Nodes[ans[i]].y);
+        fprintf(fp,"%0.6lf %0.6lf\n\n", Nodes[ans[i-1]].x, Nodes[ans[i-1]].y);
     }
 }
 int main(){
@@ -100,18 +118,30 @@ int main(){
         return 0;
     }
     route[0]=input1;
-    route[1]=input2;
     initial();
     dijkstra(input1);
-    //if(dis[input1][i]<99999)printf("%d\n",i);
-    if(dis[input2]<=99999){
-            printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input2]);
-            for(int i=0;i<=MNode;i++)if(route[i]!=0)printf("%d->",route[i]);
+    for(int i=1;i<=MaxL;i++){
+        if(Nodes[i].id==-2540)printf("%d",i);
     }
-    else printf("Sorry, can't find a way from node %d to %d.", input1,input2);
+    //if(dis[input1][i]<99999)printf("%d\n",i);
+    //if(dis[input2]<=99999){
+            printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input2]);
+            int lo=input2;
+                while (lo){
+                    ans[ct]=lo;
+                    if(route[lo]==input2)break;
+                    lo=route[lo];
+                    ct++;
+            }
+            ans[ct]=input1;
+            for(int i=ct;i>=1;i--)printf("%d->",ans[i]);
+            save_map();
+            save_file();
+    //}
+    //else printf("Sorry, can't find a way from node %d to %d.", input1,input2);
 //    fprintf("%d\n", dis[input1][input2]);
    // print(input1,input2);
-    //for(i=1;i<=MNode;i++)for(int j=1;j<=MNode;j++)if(dis[i][j]>0.001&&dis[i][j]<99999)printf("%d->%d: %lf\n",i,j,dis[i][j]);
+    //for(int i=1;i<=MNode;i++)if(dis[i]>0.001&&dis[i]<99999)printf("%d->%d: %lf\n",input1,i,dis[i]);
     /*for(int i=1;i<=MNode;i++){
             dijkstra(1);
             for(int j=1;j<=MNode;j++){
