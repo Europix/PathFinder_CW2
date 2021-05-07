@@ -25,7 +25,8 @@ int ans[MNode+10];
 int read_map();
 //Read map from .map File
 void initial();
-void dijkstra(int u);
+int dijkstra(int u);
 //Main algorithm
 int save_map();
 int save_file();
+int addroute(int u,int v,int x);
