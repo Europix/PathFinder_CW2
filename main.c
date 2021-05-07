@@ -17,11 +17,10 @@ int main(){
     route[0]=input1;
     initial();
     dijkstra(input1);
-    if(dis[input2]<=99999)printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input2]);
+    if(dis[input2]<=99999 && dis[input2]>0)printf("The shortest distance from node %d to %d is %.6lf\n",input1,input2,dis[input2]);
     else printf("Sorry, can't find a way from node %d to %d.", input1,input2);
     addroute(input1,input2,1);
-    printf("CT:%d",ct);
-    if(save_map() && save_file())printf("\n Successful saved map.txt and ans.txt\n");
+    if(save_map() && save_file())printf("\nSuccessfully saved map.txt and ans.txt\n");
     else printf("\n Failed To save the map. Please try again.\n");
     return 0;
 }
