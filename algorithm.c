@@ -22,7 +22,8 @@ void initial(){
         }
     }
 }
-void dijkstra(int u){
+int dijkstra(int u){
+    if(u<0 || u>MNode)return 0;
     memset(vis,0,sizeof(vis));
     for(int i=1;i<=MNode;i++){
             dis[i]=map[u][i];
@@ -45,4 +46,22 @@ void dijkstra(int u){
             }
         }
     }
+    return 1;
+}
+int addroute(int u,int v,int x){
+    if(x<0 || u<0 || v<0)return 0;
+     int qwq=v;
+    while (qwq){
+        ans[ct]=qwq;
+        if(route[qwq]==v)break;
+        qwq=route[qwq];
+        ct++;
+    }
+    ans[ct]=u;
+    if(x){
+            for(int i=ct;i>1;i--)printf("%d->",ans[i]);
+            printf("%d\n",ans[1]);
+            return 1;
+    }
+    else return 1;
 }
